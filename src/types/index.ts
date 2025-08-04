@@ -198,12 +198,11 @@ export interface BillableService {
 }
 export interface StockItem {
   uuid: string;
-  drugUuid: string;
+  drugUuid?: string;
   drugName: string;
-  conceptUuid: string;
-  conceptName: string;
-  commonName;
-  string;
+  conceptUuid?: string;
+  conceptName?: string;
+  commonName?: string;
 }
 
 export interface CashierItem {

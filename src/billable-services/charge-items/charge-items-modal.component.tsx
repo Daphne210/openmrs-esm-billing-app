@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import {
@@ -60,9 +60,10 @@ const AddBillableStock: React.FC<{ editingItem?: any; onClose: () => void }> = (
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
-      search: '',
+      search: editingItem?.item,
       payment: editingItem?.servicePrices || [DEFAULT_PAYMENT_OPTION],
       serviceType: editingItem?.serviceType,
     },
@@ -85,6 +86,20 @@ const AddBillableStock: React.FC<{ editingItem?: any; onClose: () => void }> = (
     }
     return null;
   };
+
+  useEffect(() => {
+    if (editingItem) {
+      reset({
+        search: editingItem.uuid || '',
+        payment: [
+          {
+            paymentMode: editingItem.paymentMode?.uuid || '',
+            price: editingItem.price || 0,
+          },
+        ],
+      });
+    }
+  }, [editingItem, reset]);
 
   const onSubmit = (data) => {
     if (!selectedItem) {
@@ -155,7 +170,7 @@ const AddBillableStock: React.FC<{ editingItem?: any; onClose: () => void }> = (
                 <Search
                   ref={searchInputRef}
                   size="md"
-                  id="conceptsSearch"
+                  id="search"
                   labelText={t('enterItem', 'Billable Commodity')}
                   placeholder={t('searchCommodity', 'Search for commodity')}
                   className={errors?.search && styles.serviceError}
